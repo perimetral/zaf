@@ -1,0 +1,24 @@
+{
+  "name": "zaf",
+  "version": "1.0.0",
+  "description": "realtime chat with random people",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/perimetral/zaf.git"
+  },
+  "keywords": [
+    "chat",
+    "realtime",
+    "socket.io"
+  ],
+  "author": "perimetral",
+  "license": "BSD-4-Clause",
+  "bugs": {
+    "url": "https://github.com/perimetral/zaf/issues"
+  },
+  "homepage": "https://github.com/perimetral/zaf#readme"
+}
