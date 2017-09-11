@@ -2,13 +2,12 @@ const cfg = {};
 
 const tools = require('./lib/tools');
 
-cfg.port = process.env.PORT || 3000;
+cfg.port = process.env.ZAF_PORT || 3001;
 cfg.morganMode = 'combined';
 cfg.defaultLayout = 'main';
 
 cfg.paths = {};
 cfg.paths.static = './public';
-cfg.paths.hbsPartials = './views/partials';
 cfg.paths.sessionStore = './db/sessionStore.db';
 
 cfg.session = {};
