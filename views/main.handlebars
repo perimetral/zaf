@@ -1,1 +1,180 @@
-atata
+<div id="app">
+	<div id="main">
+		<div class="mainContainer">
+			<div class="header">
+				<div class="headerLeft">
+					<div class="logo">
+						<a href="/" class="logo" @click.stop.prevent="switchPage('welcome')" v-if="lang === 'ru'"><span>Z</span>af Чат</a>
+						<a href="/" class="logo" @click.stop.prevent="switchPage('welcome')" v-if="lang === 'en'"><span>Z</span>AF Chat</a>
+					</div>
+				</div>
+				<div class="headerRight">
+					<div class="online">
+						<a class="peopleOnline" v-if="lang === 'ru'">Онлайн: <span>0</span> чел.</a>
+						<a class="peopleOnline" v-if="lang === 'en'">Online: <span>0</span></a>
+					</div>
+					<div class="language">
+						<select class="selectLanguage" @change="switchLang">
+							<option value="RU" id="Rus">Русский</option>
+							<option value="EN" id="Eng">English</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="content">
+				<div class="welcomeContainer" v-show="page === 'welcome'">
+					<div class="chatForm">
+						<div class="me">
+							<div class="title" v-if="lang === 'ru'">Я</div>
+							<div class="title" v-if="lang === 'en'">ME</div>
+							<div class="gender">
+								<div class="doesntMatter divInRow">
+									<input type="radio" class="doesntMatter" id="genderDoesntMatter" value="doesntMatter" name="meGenderSelect" title="" checked />
+									<label for="genderDoesntMatter" class="doesntMatter" v-if="lang === 'ru'">Не важно</label>
+									<label for="genderDoesntMatter" class="doesntMatter" v-if="lang === 'en'">D/M</label>
+								</div>
+								<div class="male divInRow">
+									<input type="radio" class="male" value="male" id="genderMale" name="meGenderSelect" title="" />
+									<label for="genderMale" class="male" v-if="lang === 'ru'">МУЖ</label>
+									<label for="genderMale" class="male" v-if="lang === 'en'">MALE</label>
+								</div>
+								<div class="female divInRow">
+									<input type="radio" class="female" value="female" id="genderFemale" name="meGenderSelect" title="" />
+									<label for="genderFemale" class="female" v-if="lang === 'ru'">ЖЕН</label>
+									<label for="genderFemale" class="female" v-if="lang === 'en'">FEMALE</label>
+								</div>
+							</div>
+							<div class="age">
+								<div class="doesntMatter divInRow">
+									<input type="radio" class="doesntMatter" id="ageDoesntMatter" value="" name="meAgeSelect" title="" checked="checked" />
+									<label class="doesntMatter" for="ageDoesntMatter" v-if="lang === 'ru'">Не важно</label>
+									<label class="doesntMatter" for="ageDoesntMatter" v-if="lang === 'en'">D/M</label>
+								</div>
+								<div class="myAge divInRow">
+									<select name="" class="myAge">
+										<option selected v-if="lang === 'ru'">Возраст</option>
+										<option selected v-if="lang === 'en'">Age</option>
+										<option v-for="x in ageValues">:[x]</option>
+									</select>
+								</div>
+							</div>
+							<div class="location">
+								<div class="doesntMatter divInRow">
+									<input type="radio" class="doesntMatter" id="meLocationDoesntMatter" value="" name="meLocation" title="" checked="checked" />
+									<label class="doesntMatter" for="meLocationDoesntMatter" v-if="lang === 'ru'">Не важно</label>
+									<label class="doesntMatter" for="meLocationDoesntMatter" v-if="lang === 'en'">D/M</label>
+								</div>
+								<div class="myLocation divInRow">
+									<input type="text" class="meLocation" id="" name="" placeholder="Страна/Область/Город" v-if="lang === 'ru'"/>
+									<input type="text" class="meLocation" id="" name="" placeholder="Country/State/City" v-if="lang === 'en'"/>
+								</div>
+							</div>
+						</div>
+						<div class="stranger">
+							<div class="title" v-if="lang === 'ru'">Незнакомец</div>
+							<div class="title" v-if="lang === 'en'">Stranger</div>
+							<div class="gender">
+								<div class="male divInRow">
+									<input type="checkbox" class="male" value="" id="strangerGenderMale" name="strangerGenderSelect" title="" />
+									<label class="male" for="strangerGenderMale" v-if="lang === 'ru'">МУЖ</label>
+									<label class="male" for="strangerGenderMale" v-if="lang === 'en'">MALE</label>
+								</div>
+								<div class="female divInRow">
+									<input type="checkbox" class="female" value="" id="strangerGenderFemale" name="strangerGenderSelect" title="" />
+									<label class="female" for="strangerGenderFemale" v-if="lang === 'ru'">ЖЕН</label>
+									<label class="female" for="strangerGenderFemale" v-if="lang === 'en'">FEMALE</label>
+								</div>
+							</div>
+							<div class="age">
+								<div class="strangerAgeFrom divInRow">
+									<select name="" class="strangerAgeFrom">
+										<option selected v-if="lang === 'ru'">От</option>
+										<option selected v-if="lang === 'en'">From</option>
+										<option v-for="x in ageValues">:[x]</option>
+									</select>
+								</div>
+								<div class="strangerAgeUpTo divInRow">
+									<select name="" class="strangerAgeUpTo">
+										<option selected v-if="lang === 'ru'">До</option>
+										<option selected v-if="lang === 'en'">Up To</option>
+										<option v-for="x in ageValues">:[x]</option>
+									</select>
+								</div>
+							</div>
+							<div class="location">
+								<div class="strangerLocation">
+									<input type="text" class="strangerLocation inactive" id="" name="" placeholder="Страна/Область/Город" v-if="lang === 'ru'"/>
+									<input type="text" class="strangerLocation inactive" id="" name="" placeholder="Country/State/City" v-if="lang === 'en'"/>
+								</div>
+							</div>
+						</div>
+						<div class="connect">
+							<input type="button" class="connectButton" value="СОЕДИНИТЬСЯ" v-if="lang === 'ru'"/>
+							<input type="button" class="connectButton" value="START CHAT" v-if="lang === 'en'"/>
+						</div>
+					</div>
+				</div>
+				<div class="chatContainer" v-if="page === 'chat'">
+				</div>
+				<div class="aboutContainer" v-if="page === 'about'">
+					<h1 class="title" v-if="lang === 'ru'">О проекте • Zaf Чат</h1>
+					<h1 class="title" v-if="lang === 'en'">About • Zaf Chat</h1>
+					<div class="aboutText" v-if="lang === 'ru'">
+						Zaf Чат — это чат для анонимного общения с различными людьми на любые темы по всему миру. Чат Zaf поможет вам быстро найти человека по таким параметрам, как: Пол, Возраст и Местонахождение человека. В чате не требуется регистрация. Вы сами решаете продолжать общение с незнакомцем или нет. Как вы, так и незнакомец можете иметь самые разные темы общения и цели знакомств. Ваши сообщения уникальны, так как ваши переписки нигде не сохраняются. В нашем чате присутствует также некий фактор "фортуны". А вдруг вы познакомитесь с хорошим человеком имено в чате Zaf. В общем, пользуйтесь, общайтесь, встречайтесь, влюбляйтесь! Приятных вам знакомств и общения!<br><br>Я долго думал над этим проектом, и всё-таки запускаю его, вопреки критике окружающих меня людей.<br><br>Надеюсь с помощью чата Zaf помогу вам найти вашего незнакомца! :)<br><br>
+					</div>
+					<div class="aboutText" v-if="lang === 'en'">
+						Some English about text
+					</div>
+				</div>
+				<div class="donateContainer" v-if="page === 'donate'">
+					<h1 class="title" v-if="lang === 'ru'">ПОДДЕРЖИТЕ ПРОЕКТ</h1>
+					<h1 class="title" v-if="lang === 'en'">SUPPORT US</h1>
+					<div class="aboutText" v-if="lang === 'ru'">
+						<p>Если вам нравится проект Zaf Чат, и вы хотите, чтобы данный чат успешно развивался дальше, то помочь проекту Zaf вы можете несколькими способами...</p>
+						<p>Вы можете рассказать друзьям о Заф Чате. Просто разместите ссылку чата в социальных сетях или на странице вашего сайта/блога. Таким образом, вы очень поможете в продвижении чата в массы.</p>
+						<p>Также, мы не откажемся от финансовой поддержки, ведь для развития проекта, мы арендуем дорогостоящие сервера, ведём техническую поддержку чата, и постоянно его улучшаем. Если вы хотите помочь, то просто свяжитесь с нами <a href="/donate">по ссылке</a>.</p>
+					</div>
+					<div class="aboutText" v-if="lang === 'en'">
+						Some English donate text
+					</div>
+				</div>
+				<div class="contactContainer" v-if="page === 'contact'">
+					<h1 class="title" v-if="lang === 'ru'">Связь с администрацией</h1>
+					<h1 class="title" v-if="lang === 'en'">Contact us</h1>
+					<div class="aboutText" v-if="lang === 'ru'">
+						<p>Для связи с администрацией пишите на эл. адрес: info@zaf.su</p>
+					</div>
+					<div class="aboutText" v-if="lang === 'en'">
+						<p>Contact us by emailing here: info@zaf.su</p>
+					</div>
+				</div>
+				<div class="footer">
+					<div class="footerLinks">
+						<ul class="links">
+							<li>
+								<a @click.stop.prevent="switchPage('about')" v-if="lang === 'ru'">О проекте</a>
+								<a @click="switchPage('about')" v-if="lang === 'en'">About</a>
+							</li>
+							<li>
+								<a @click="switchPage('donate')" v-if="lang === 'ru'">Поддержите проект</a>
+								<a @click="switchPage('donate')" v-if="lang === 'en'">Support development</a>
+							</li>
+							<li>
+								<a @click="switchPage('contact')" v-if="lang === 'ru'">Связь с администрацией</a>
+								<a @click="switchPage('contact')" v-if="lang === 'en'">Contacts</a>
+							</li>
+						</ul>
+					</div>
+					<div class="poweredByZaf" v-if="lang === 'ru'">ZAF Чат &copy; 2012-2017</div>
+					<div class="poweredByZaf" v-if="lang === 'en'">ZAF Chat &copy; 2012-2017</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="welcomeContainer" v-show="page === 'welcome'">
+	</div>
+	<div id="chatContainer" v-show="page === 'chat'">
+	</div>
+	<div id="aboutContainer" v-show="page === 'about'">
+	</div>
+</div>

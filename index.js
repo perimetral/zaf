@@ -35,7 +35,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', (req, res, next) => {
 	console.log('atata');
 	return res.render('main', {
-		title: 'ZAF',
+		iouri: `${$.cfg.https.enabled ? 'https' : 'http'}://${$.cfg.host}${$.cfg.port !== 80 ? ":" + $.cfg.port : ''}`,
+		mode: $.cfg.mode,
 	});
 });
 

@@ -2,12 +2,32 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>{{ title }}</title>
+	<meta http-equiv="content-type" content="text/html charset=utf-8">
+	<meta name="author" content="ZAF Чат">
+	<meta name="description" content="Zaf Чат для анонимного общения и поиска собеседников по всему миру." />
+	<title></title>
+	<link rel="shortcut icon" href="favicon.ico">
 	<link rel="stylesheet" href="/css/style.css">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
 	<script type="text/javascript" src="socket.io/socket.io.js"></script>
-	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/vue.min.js"></script>
 </head>
 <body>
 	{{{body}}}
+	<script type="text/javascript">
+		const staticData = {
+			iouri: '{{ iouri }}',
+			mode: '{{ mode }}',
+			title: {
+				ru: 'ZAF Чат',
+				en: 'ZAF Chat',
+			},
+			defaultPage: 'welcome',
+			defaultLang: 'ru',
+			minAge: 16,
+			maxAge: 90,
+		};
+	</script>
+	<script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>
