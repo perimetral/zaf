@@ -3,7 +3,7 @@ const cfg = {};
 const tools = require('./lib/tools');
 
 cfg.host = 'localhost';
-cfg.port = process.env.ZAF_PORT || 3001;
+cfg.port = process.env.PORT || 3000;
 cfg.mode = 'production';
 cfg.morganMode = 'combined';
 cfg.defaultLayout = 'main';
