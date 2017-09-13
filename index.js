@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 global.$ = {};
 $.cfg = require('./config');
 $.tools = require('./lib/tools');
