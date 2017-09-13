@@ -1,4 +1,5 @@
 const $byid = document.getElementById;
+console.log(`running ${staticData.iouri}`);
 let socket = io.connect(staticData.iouri);
 let app = new Vue({
 	el: '#app',
