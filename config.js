@@ -25,5 +25,8 @@ cfg.session.unset = 'destroy';
 cfg.https = {};
 cfg.https.enabled = false;
 
+cfg.db = {};
+cfg.db.inMemoryOnly = true;
+
 module.exports = cfg;
 

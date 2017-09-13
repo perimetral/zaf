@@ -163,11 +163,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f6f6', end
 	padding:5px;
 }
 
-input[type="checkbox"].inactive, select.inactive, input[type="text"].inactive {
+input[type="checkbox"].inactive, select.inactive, input[type="text"].inactive, div.male.divInRow.inactive, div.male.divInRow.inactive > *, div.female.divInRow.inactive, div.female.divInRow.inactive > * {
 	color: #666 !important;
     background-color: #eee !important;
 	border-color:#666 !important;
     cursor: not-allowed !important;
+    user-select: none !important;;
 }
 
 #main .mainContainer  .content .chatForm select {

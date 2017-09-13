@@ -10,8 +10,8 @@
 				</div>
 				<div class="headerRight">
 					<div class="online">
-						<a class="peopleOnline" v-if="lang === 'ru'">Онлайн: <span>0</span> чел.</a>
-						<a class="peopleOnline" v-if="lang === 'en'">Online: <span>0</span></a>
+						<a class="peopleOnline" v-if="lang === 'ru'">Онлайн: <span>:[usersOnline]</span> чел.</a>
+						<a class="peopleOnline" v-if="lang === 'en'">Online: <span>:[usersOnline]</span></a>
 					</div>
 					<div class="language">
 						<select class="selectLanguage" @change="switchLang">
@@ -74,27 +74,27 @@
 							<div class="title" v-if="lang === 'ru'">Незнакомец</div>
 							<div class="title" v-if="lang === 'en'">Stranger</div>
 							<div class="gender">
-								<div class="male divInRow">
-									<input type="checkbox" class="male" value="" id="strangerGenderMale" name="strangerGenderSelect" title="" />
+								<div class="male divInRow" v-bind:class="{ inactive: down_strangerGenderMale }">
+									<input type="checkbox" class="male" value="" id="strangerGenderMale" name="strangerGenderSelect" title="" @click="function(ev){clickInactive(ev,'down_strangerGenderMale');}" />
 									<label class="male" for="strangerGenderMale" v-if="lang === 'ru'">МУЖ</label>
 									<label class="male" for="strangerGenderMale" v-if="lang === 'en'">MALE</label>
 								</div>
-								<div class="female divInRow">
-									<input type="checkbox" class="female" value="" id="strangerGenderFemale" name="strangerGenderSelect" title="" />
+								<div class="female divInRow" v-bind:class="{ inactive: down_strangerGenderFemale }">
+									<input type="checkbox" class="female" value="" id="strangerGenderFemale" name="strangerGenderSelect" title="" @click="function(ev){clickInactive(ev,'down_strangerGenderFemale');}" />
 									<label class="female" for="strangerGenderFemale" v-if="lang === 'ru'">ЖЕН</label>
 									<label class="female" for="strangerGenderFemale" v-if="lang === 'en'">FEMALE</label>
 								</div>
 							</div>
 							<div class="age">
 								<div class="strangerAgeFrom divInRow">
-									<select name="" class="strangerAgeFrom">
+									<select name="" class="strangerAgeFrom" v-bind:class="{ inactive: down_strangerAgeFrom }" @click="function(ev){clickInactive(ev,'down_strangerAgeFrom');}">
 										<option selected v-if="lang === 'ru'">От</option>
 										<option selected v-if="lang === 'en'">From</option>
 										<option v-for="x in ageValues">:[x]</option>
 									</select>
 								</div>
 								<div class="strangerAgeUpTo divInRow">
-									<select name="" class="strangerAgeUpTo">
+									<select name="" class="strangerAgeUpTo" v-bind:class="{ inactive: down_strangerAgeUpTo }" @click="function(ev){clickInactive(ev,'down_strangerAgeUpTo');}">
 										<option selected v-if="lang === 'ru'">До</option>
 										<option selected v-if="lang === 'en'">Up To</option>
 										<option v-for="x in ageValues">:[x]</option>
@@ -103,8 +103,8 @@
 							</div>
 							<div class="location">
 								<div class="strangerLocation">
-									<input type="text" class="strangerLocation inactive" id="" name="" placeholder="Страна/Область/Город" v-if="lang === 'ru'"/>
-									<input type="text" class="strangerLocation inactive" id="" name="" placeholder="Country/State/City" v-if="lang === 'en'"/>
+									<input type="text" class="strangerLocation" v-bind:class="{ inactive: down_strangerLocation }" id="" name="" placeholder="Страна/Область/Город" v-if="lang === 'ru'"/>
+									<input type="text" class="strangerLocation" v-bind:class="{ inactive: down_strangerLocation }" id="" name="" placeholder="Country/State/City" v-if="lang === 'en'"/>
 								</div>
 							</div>
 						</div>
@@ -115,6 +115,60 @@
 					</div>
 				</div>
 				<div class="chatContainer" v-if="page === 'chat'">
+					<div id="chat">
+						<div class="chatWindow">
+							<div class="header">
+								<div id="searchStatusContainer" v-show="searchStatus !== null">
+									<div class="lookingForStranger" v-if="lang === 'ru' && searchStatus === 'looking'">Ищем незнакомца</div>
+									<div class="lookingForStranger" v-if="lang === 'en' && searchStatus === 'looking'">Looking for a stranger</div>
+									<div class="strangerFound" v-if="lang === 'ru' && searchStatus === 'found'">Незнакомец найден, поздоровайтесь!</div>
+									<div class="strangerFound" v-if="lang === 'en' && searchStatus === 'found'">Stranger is found, say Privet!</div>
+									<div class="strangerEndedChat" v-if="lang === 'ru' && searchStatus === 'externalEnd'">Незнакомец завершил чат!</div>
+									<div class="strangerEndedChat" v-if="lang === 'en' && searchStatus === 'externalEnd'">Stranger ended the chat!</div>
+									<div class="youEndedChat" v-if="lang === 'ru' && searchStatus === 'internalEnd'">Ты завершил чат!</div>
+									<div class="youEndedChat" v-if="lang === 'en' && searchStatus === 'internalEnd'">You ended the chat!</div>
+								</div>
+							</div>
+							<div class="dialog">
+								<div class="dialogWindow">
+								</div>
+							</div>
+							<div class="toolsLine">
+								<div class="typingOrNot" v-if="externalTyping">
+									<span v-if="lang === 'ru'">Собеседник печатает сообщение</span>
+									<span v-if="lang === 'en'">Stranger typing</span>
+								</div>
+								<div class="soundOnOff">
+									<input type="checkbox" class="soundOnOff" value="" id="soundOnOff" name="strangerGenderSelect" title="" checked="checked" />
+									<label class="soundOnOff" for="soundOnOff"></label>
+								</div>
+							</div>
+							<div class="messageTextBox">
+								<div class="textBox">
+									<textarea class="textBox" placeholder="Сообщение..." v-show="lang === 'ru'"></textarea>
+									<textarea class="textBox" placeholder="Message..." v-show="lang === 'en'"></textarea>
+								</div>
+							</div>
+							<div class="buttons">
+								<div class="sendMessage">
+									<input type="button" class="sendMessageButton" @click="sendMessage" value="Отправить (Enter)" v-if="lang === 'ru'" />
+									<input type="button" class="sendMessageButton" @click="sendMessage" value="Send (Enter)" v-if="lang === 'en'" />
+								</div>
+								<div class="endChat">
+									<input type="button" class="endChatButton" @click="endChat" value="Завершить чат" v-if="lang === 'ru'" />
+									<input type="button" class="endChatButton" @click="endChat" value="End chat" v-if="lang === 'en'" />
+								</div>
+								<div class="continueSearch">
+									<input type="button" class="continueSearchButton inactive" @click="continueSearch" value="Продолжить поиск" v-if="lang === 'ru'" />
+									<input type="button" class="continueSearchButton inactive" @click="continueSearch" value="Continue search" v-if="lang === 'en'" />
+								</div>
+								<div class="changeSearchParameters">
+									<input type="button" class="changeSearchParametersButton inactive" @click="changePrefs" value="Изменить параметры" v-if="lang === 'ru'" />
+									<input type="button" class="changeSearchParametersButton inactive" @click="changePrefs" value="Change preferences" v-if="lang === 'en'" />
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="aboutContainer" v-if="page === 'about'">
 					<h1 class="title" v-if="lang === 'ru'">О проекте • Zaf Чат</h1>
