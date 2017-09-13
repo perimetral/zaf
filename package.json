@@ -4,11 +4,11 @@
   "description": "realtime chat with random people",
   "main": "index.js",
   "engines": {
-    "node": "^8.4.0",
+    "node": "^8.4.0"
   },
   "scripts": {
     "test": "mocha .",
-    "start": "./index.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
