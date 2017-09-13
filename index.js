@@ -52,7 +52,7 @@ $.users = $.tools.promisifyNeDB(users);
 
 app.get('/', (req, res, next) => {
 	return res.render('main', {
-		iouri: `${$.cfg.https.enabled ? 'https' : 'http'}://${$.cfg.host}${$.cfg.port !== 80 ? ":" + $.cfg.port : ''}`,
+		iouri: `${($.cfg.https.enabled || $.cfg.heroku) ? 'https' : 'http'}://${$.cfg.host}${$.cfg.port !== 80 ? ":" + $.cfg.port : ''}`,
 		mode: $.cfg.mode,
 	});
 });
