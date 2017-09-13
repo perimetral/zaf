@@ -183,6 +183,10 @@ input[type="checkbox"].inactive, select.inactive, input[type="text"].inactive, d
 	border-radius:0 5px 5px 0;
 	border-left:0;
 }
+#main .mainContainer  .content .chatForm select.internalLocation {
+	border-radius:0 5px 5px 0;
+	border-left:0;
+}
 
 #main .mainContainer  .content .chatForm select.strangerAgeFrom {
 	border-radius:5px 0 0 5px;
@@ -238,6 +242,9 @@ input[type="checkbox"].inactive, select.inactive, input[type="text"].inactive, d
     flex-wrap:wrap;
     justify-content:center;
 	text-align:center;
+}
+#main .mainContainer  .content .chatForm .me label.doesntMatter {
+	border-radius:5px 0 0 5px;
 }
 
 #main .mainContainer  .content .chatForm .me .title {

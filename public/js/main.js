@@ -1,21 +1,27 @@
-const $byid = document.getElementById;
-console.log(`running ${staticData.iouri}`);
 let socket = io.connect(staticData.iouri);
+
+let ageValues = [];
+for (let i = staticData.minAge; i < staticData.maxAge; i++) ageValues.push(i);
+
 let app = new Vue({
 	el: '#app',
 	delimiters: [ ':[', ']' ],
 	data: {
 		page: staticData.defaultPage,
 		lang: staticData.defaultLang,
-		ageValues: [],
+		ageValues,
 		searchStatus: null,
 		externalTyping: false,
 		usersOnline: 0,
-		down_strangerGenderMale: true,
-		down_strangerGenderFemale: true,
-		down_strangerAgeFrom: true,
-		down_strangerAgeUpTo: true,
-		down_strangerLocation: true,
+		down_strangerGender: true,
+		internalGender: null,
+		internalAge: '-',
+		internalLocation: '',
+		externalMaleInclude: true,
+		externalFemaleInclude: true,
+		externalAgeFrom: '-',
+		externalAgeTo: '-',
+		externalLocation: '',
 	},
 	methods: {
 		switchPage: function (page) {
@@ -29,6 +35,35 @@ let app = new Vue({
 		updateTitle: function () {
 			document.title = staticData.title[this.lang];
 		},
+		clickInactive: function (ev, inactiveController) {
+			if (this[inactiveController]) {
+				ev.preventDefault();
+				ev.stopPropagation();
+			};
+		},
+		chooseInternalGender: function (gender) {
+			this.down_strangerGender = gender ? false : true;
+			this.internalGender = gender;
+		},
+		chooseInitialAge: function () {
+			this.internalAge = '-';
+		},
+		chooseInitialLocation: function () {
+			this.internalLocation = '';
+		},
+		connect: function () {
+			let query = {
+				internalGender: this.internalGender,
+				internalAge: this.internalAge,
+				internalLocation: this.internalLocation,
+				externalMaleInclude: this.externalMaleInclude,
+				externalFemaleInclude: this.externalFemaleInclude,
+				externalAgeFrom: this.externalAgeFrom,
+				externalAgeTo: this.externalAgeTo,
+				externalLocation: this.externalLocation,
+			};
+			socket.emit('begin_looking', query);
+		},
 		sendMessage: function () {
 
 		},
@@ -41,17 +76,9 @@ let app = new Vue({
 		changePrefs: function () {
 
 		},
-		clickInactive: function (ev, inactiveController) {
-			if (this[inactiveController]) {
-				ev.preventDefault();
-				ev.stopPropagation();
-				//strangerAgeFrom strangerAgeUpTo
-			};
-		}
 	},
 	created: function () {
 		this.updateTitle();
-		for (let i = staticData.minAge; i < staticData.maxAge; i++) this.ageValues.push(i);
 	},
 });
 

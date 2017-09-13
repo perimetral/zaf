@@ -29,44 +29,44 @@
 							<div class="title" v-if="lang === 'en'">ME</div>
 							<div class="gender">
 								<div class="doesntMatter divInRow">
-									<input type="radio" class="doesntMatter" id="genderDoesntMatter" value="doesntMatter" name="meGenderSelect" title="" checked />
+									<input type="radio" class="doesntMatter" id="genderDoesntMatter" value="doesntMatter" name="meGenderSelect" title="" checked @click="chooseInternalGender(null)" />
 									<label for="genderDoesntMatter" class="doesntMatter" v-if="lang === 'ru'">Не важно</label>
 									<label for="genderDoesntMatter" class="doesntMatter" v-if="lang === 'en'">D/M</label>
 								</div>
 								<div class="male divInRow">
-									<input type="radio" class="male" value="male" id="genderMale" name="meGenderSelect" title="" />
+									<input type="radio" class="male" value="male" id="genderMale" name="meGenderSelect" title="" @click="chooseInternalGender('male')" />
 									<label for="genderMale" class="male" v-if="lang === 'ru'">МУЖ</label>
 									<label for="genderMale" class="male" v-if="lang === 'en'">MALE</label>
 								</div>
 								<div class="female divInRow">
-									<input type="radio" class="female" value="female" id="genderFemale" name="meGenderSelect" title="" />
+									<input type="radio" class="female" value="female" id="genderFemale" name="meGenderSelect" title="" @click="chooseInternalGender('female')" />
 									<label for="genderFemale" class="female" v-if="lang === 'ru'">ЖЕН</label>
 									<label for="genderFemale" class="female" v-if="lang === 'en'">FEMALE</label>
 								</div>
 							</div>
 							<div class="age">
 								<div class="doesntMatter divInRow">
-									<input type="radio" class="doesntMatter" id="ageDoesntMatter" value="" name="meAgeSelect" title="" checked="checked" />
+									<input type="radio" class="doesntMatter" id="ageDoesntMatter" value="" name="meAgeSelect" title="" v-bind:checked="internalAge === '-'" @click.stop.prevent="chooseInitialAge" />
 									<label class="doesntMatter" for="ageDoesntMatter" v-if="lang === 'ru'">Не важно</label>
 									<label class="doesntMatter" for="ageDoesntMatter" v-if="lang === 'en'">D/M</label>
 								</div>
 								<div class="myAge divInRow">
-									<select name="" class="myAge">
-										<option selected v-if="lang === 'ru'">Возраст</option>
-										<option selected v-if="lang === 'en'">Age</option>
+									<select name="" class="myAge" v-model="internalAge">
+										<option selected v-if="lang === 'ru'" value="-">Возраст</option>
+										<option selected v-if="lang === 'en'" value="-">Age</option>
 										<option v-for="x in ageValues">:[x]</option>
 									</select>
 								</div>
 							</div>
 							<div class="location">
 								<div class="doesntMatter divInRow">
-									<input type="radio" class="doesntMatter" id="meLocationDoesntMatter" value="" name="meLocation" title="" checked="checked" />
+									<input type="radio" class="doesntMatter" id="meLocationDoesntMatter" value="" name="meLocation" title="" v-bind:checked="! internalLocation.length" @click.stop.prevent="chooseInitialLocation" />
 									<label class="doesntMatter" for="meLocationDoesntMatter" v-if="lang === 'ru'">Не важно</label>
 									<label class="doesntMatter" for="meLocationDoesntMatter" v-if="lang === 'en'">D/M</label>
 								</div>
 								<div class="myLocation divInRow">
-									<input type="text" class="meLocation" id="" name="" placeholder="Страна/Область/Город" v-if="lang === 'ru'"/>
-									<input type="text" class="meLocation" id="" name="" placeholder="Country/State/City" v-if="lang === 'en'"/>
+									<input type="text" class="meLocation" id="" name="" placeholder="Страна/Область/Город" v-if="lang === 'ru'" v-model="internalLocation" />
+									<input type="text" class="meLocation" id="" name="" placeholder="Country/State/City" v-if="lang === 'en'" v-model="internalLocation" />
 								</div>
 							</div>
 						</div>
@@ -74,43 +74,43 @@
 							<div class="title" v-if="lang === 'ru'">Незнакомец</div>
 							<div class="title" v-if="lang === 'en'">Stranger</div>
 							<div class="gender">
-								<div class="male divInRow" v-bind:class="{ inactive: down_strangerGenderMale }">
-									<input type="checkbox" class="male" value="" id="strangerGenderMale" name="strangerGenderSelect" title="" @click="function(ev){clickInactive(ev,'down_strangerGenderMale');}" />
+								<div class="male divInRow" v-bind:class="{ inactive: down_strangerGender }">
+									<input type="checkbox" class="male" value="" id="strangerGenderMale" name="strangerGenderSelect" title="" @click="function(ev){clickInactive(ev,'down_strangerGender');}" v-model="externalMaleInclude" />
 									<label class="male" for="strangerGenderMale" v-if="lang === 'ru'">МУЖ</label>
 									<label class="male" for="strangerGenderMale" v-if="lang === 'en'">MALE</label>
 								</div>
-								<div class="female divInRow" v-bind:class="{ inactive: down_strangerGenderFemale }">
-									<input type="checkbox" class="female" value="" id="strangerGenderFemale" name="strangerGenderSelect" title="" @click="function(ev){clickInactive(ev,'down_strangerGenderFemale');}" />
+								<div class="female divInRow" v-bind:class="{ inactive: down_strangerGender }">
+									<input type="checkbox" class="female" value="" id="strangerGenderFemale" name="strangerGenderSelect" title="" @click="function(ev){clickInactive(ev,'down_strangerGender');}" v-model="externalFemaleInclude" />
 									<label class="female" for="strangerGenderFemale" v-if="lang === 'ru'">ЖЕН</label>
 									<label class="female" for="strangerGenderFemale" v-if="lang === 'en'">FEMALE</label>
 								</div>
 							</div>
 							<div class="age">
 								<div class="strangerAgeFrom divInRow">
-									<select name="" class="strangerAgeFrom" v-bind:class="{ inactive: down_strangerAgeFrom }" @click="function(ev){clickInactive(ev,'down_strangerAgeFrom');}">
-										<option selected v-if="lang === 'ru'">От</option>
-										<option selected v-if="lang === 'en'">From</option>
+									<select name="" class="strangerAgeFrom" v-bind:class="{ inactive: internalAge === '-' }" v-bind:disabled="internalAge === '-'" v-model="externalAgeFrom">
+										<option selected v-if="lang === 'ru'" value="-">От</option>
+										<option selected v-if="lang === 'en'" value="-">From</option>
 										<option v-for="x in ageValues">:[x]</option>
 									</select>
 								</div>
 								<div class="strangerAgeUpTo divInRow">
-									<select name="" class="strangerAgeUpTo" v-bind:class="{ inactive: down_strangerAgeUpTo }" @click="function(ev){clickInactive(ev,'down_strangerAgeUpTo');}">
-										<option selected v-if="lang === 'ru'">До</option>
-										<option selected v-if="lang === 'en'">Up To</option>
+									<select name="" class="strangerAgeUpTo" v-bind:class="{ inactive: internalAge === '-' }" v-bind:disabled="internalAge === '-'" v-model="externalAgeTo">
+										<option selected v-if="lang === 'ru'" value="-">До</option>
+										<option selected v-if="lang === 'en'" value="-">Up To</option>
 										<option v-for="x in ageValues">:[x]</option>
 									</select>
 								</div>
 							</div>
 							<div class="location">
 								<div class="strangerLocation">
-									<input type="text" class="strangerLocation" v-bind:class="{ inactive: down_strangerLocation }" id="" name="" placeholder="Страна/Область/Город" v-if="lang === 'ru'"/>
-									<input type="text" class="strangerLocation" v-bind:class="{ inactive: down_strangerLocation }" id="" name="" placeholder="Country/State/City" v-if="lang === 'en'"/>
+									<input type="text" class="strangerLocation" v-bind:class="{ inactive: ! internalLocation.length }" v-bind:disabled="! internalLocation.length" id="" name="" placeholder="Страна/Область/Город" v-if="lang === 'ru'" v-model="externalLocation" />
+									<input type="text" class="strangerLocation" v-bind:class="{ inactive: ! internalLocation.length }" v-bind:disabled="! internalLocation.length" id="" name="" placeholder="Country/State/City" v-if="lang === 'en'" v-model="externalLocation" />
 								</div>
 							</div>
 						</div>
 						<div class="connect">
-							<input type="button" class="connectButton" value="СОЕДИНИТЬСЯ" v-if="lang === 'ru'"/>
-							<input type="button" class="connectButton" value="START CHAT" v-if="lang === 'en'"/>
+							<input type="button" class="connectButton" value="СОЕДИНИТЬСЯ" v-if="lang === 'ru'" @click="connect" />
+							<input type="button" class="connectButton" value="START CHAT" v-if="lang === 'en'" @click="connect" />
 						</div>
 					</div>
 				</div>

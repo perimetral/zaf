@@ -28,7 +28,12 @@ app.use(session({
 	saveUninitialized: $.cfg.session.saveUninitialized,
 	cookie: $.cfg.session.cookie,
 	store: new NedbSessionStore({
-		filename: $.cfg.paths.sessionStore,
+		inMemoryOnly: $.cfg.db.inMemoryOnly,
+		autoload: true,
+		onload: (e) => {
+			if (e) console.log(`IN-MEMORY SESSIONS DB ERROR: ${e}`);
+			console.log(`IN-MEMORY SESSIONS DB STARTED`);
+		},
 	}),
 	unset: $.cfg.session.unset,
 }));
@@ -42,8 +47,8 @@ let users = new NeDB({
 	inMemoryOnly: $.cfg.db.inMemoryOnly,
 	autoload: true,
 	onload: (e) => {
-		if (e) console.log(`USERS DB ERROR: ${e}`);
-		console.log(`USERS DB STARTED`);
+		if (e) console.log(`IN-MEMORY USERS DB ERROR: ${e}`);
+		console.log(`IN-MEMORY USERS DB STARTED`);
 		$.state.dbReady = true;
 	},
 });
