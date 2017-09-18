@@ -54,6 +54,16 @@ let users = new NeDB({
 });
 users.persistence.stopAutocompaction();
 $.users = $.tools.promisifyNeDB(users);
+let links = new NeDB({
+	inMemoryOnly: $.cfg.db.inMemoryOnly,
+	autoload: true,
+	onload: (e) => {
+		if (e) console.log(`IN-MEMORY LINKS DB ERROR: ${e}`);
+		console.log(`IN-MEMORY LINKS DB STARTED`);
+	},
+});
+links.persistence.stopAutocompaction();
+$.links = $.tools.promisifyNeDB(links);
 
 app.get('/', (req, res, next) => {
 	return res.render('main', {
@@ -72,6 +82,10 @@ $.io.on('connection', (socket) => {
 	}).catch((e) => {
 		if (e) console.log(`SOCKET ERROR: ${e}`);
 	});
+	setInterval(() => {
+		$.tools.updateOnline().then(() => {
+		}).catch((e) => { if (e) console.log(`ONLINE UPDATE ERROR: ${e}`); });
+	}, $.cfg.onlineBroadcastDelay);
 });
 
 server.listen($.cfg.port, () => {

@@ -121,16 +121,30 @@
 								<div id="searchStatusContainer" v-show="searchStatus !== null">
 									<div class="lookingForStranger" v-if="lang === 'ru' && searchStatus === 'looking'">Ищем незнакомца</div>
 									<div class="lookingForStranger" v-if="lang === 'en' && searchStatus === 'looking'">Looking for a stranger</div>
-									<div class="strangerFound" v-if="lang === 'ru' && searchStatus === 'found'">Незнакомец найден, поздоровайтесь!</div>
-									<div class="strangerFound" v-if="lang === 'en' && searchStatus === 'found'">Stranger is found, say Privet!</div>
-									<div class="strangerEndedChat" v-if="lang === 'ru' && searchStatus === 'externalEnd'">Незнакомец завершил чат!</div>
-									<div class="strangerEndedChat" v-if="lang === 'en' && searchStatus === 'externalEnd'">Stranger ended the chat!</div>
-									<div class="youEndedChat" v-if="lang === 'ru' && searchStatus === 'internalEnd'">Ты завершил чат!</div>
-									<div class="youEndedChat" v-if="lang === 'en' && searchStatus === 'internalEnd'">You ended the chat!</div>
+									<div class="strangerFound" v-if="lang === 'ru' && searchStatus === 'found' && (! messages.length)">Незнакомец найден, поздоровайтесь!</div>
+									<div class="strangerFound" v-if="lang === 'en' && searchStatus === 'found' && (! messages.length)">Stranger is found, say Privet!</div>
+									<div class="strangerEndedChat" v-if="lang === 'ru' && searchStatus === 'end' && endReason === 'external'">Незнакомец завершил чат!</div>
+									<div class="strangerEndedChat" v-if="lang === 'en' && searchStatus === 'end' && endReason === 'external'">Stranger ended the chat!</div>
+									<div class="youEndedChat" v-if="lang === 'ru' && searchStatus === 'end' && endReason === 'internal'">Ты завершил чат!</div>
+									<div class="youEndedChat" v-if="lang === 'en' && searchStatus === 'end' && endReason === 'internal'">You ended the chat!</div>
 								</div>
 							</div>
 							<div class="dialog">
-								<div class="dialogWindow">
+								<div class="dialogWindow" id="chatParent">
+									<div v-for="message in messages">
+										<div class="messageLine" :class="{ myMessage: message.internal, strangerMessage: ! message.internal }">
+											<div class="info" :class="{ myInfo: message.internal, strangerInfo: ! message.internal }">
+												<div class="title" v-if="lang === 'ru' && message.internal">Я</div>
+												<div class="title" v-if="lang === 'en' && message.internal">Me</div>
+												<div class="title" v-if="lang === 'ru' && (! message.internal)">Незнакомец</div>
+												<div class="title" v-if="lang === 'en' && (! message.internal)">Stranger</div>
+												<div class="time">:[message.timestamp]</div>
+											</div>
+											<div class="messageText" :class="{ myMessageText: message.internal, strangerMessageText: ! message.internal }">
+												:[message.text]
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 							<div class="toolsLine">
@@ -145,26 +159,26 @@
 							</div>
 							<div class="messageTextBox">
 								<div class="textBox">
-									<textarea class="textBox" placeholder="Сообщение..." v-show="lang === 'ru'"></textarea>
-									<textarea class="textBox" placeholder="Message..." v-show="lang === 'en'"></textarea>
+									<textarea class="textBox" placeholder="Сообщение..." id="inputMessageBox" v-show="lang === 'ru'" @keyup.ctrl.enter="sendMessage" :disabled="searchStatus !== 'found'"></textarea>
+									<textarea class="textBox" placeholder="Message..." id="inputMessageBox" v-show="lang === 'en'" @keyup.ctrl.enter="sendMessage" :disabled="searchStatus !== 'found'"></textarea>
 								</div>
 							</div>
 							<div class="buttons">
 								<div class="sendMessage">
-									<input type="button" class="sendMessageButton" @click="sendMessage" value="Отправить (Enter)" v-if="lang === 'ru'" />
-									<input type="button" class="sendMessageButton" @click="sendMessage" value="Send (Enter)" v-if="lang === 'en'" />
+									<input type="button" class="sendMessageButton" @click="sendMessage" value="Отправить (Enter)" v-if="lang === 'ru'" v-bind:disabled="searchStatus !== 'found'" v-bind:class="{ inactive: searchStatus !== 'found' }" />
+									<input type="button" class="sendMessageButton" @click="sendMessage" value="Send (Enter)" v-if="lang === 'en'" v-bind:disabled="searchStatus !== 'found'" v-bind:class="{ inactive: searchStatus !== 'found' }" />
 								</div>
 								<div class="endChat">
-									<input type="button" class="endChatButton" @click="endChat" value="Завершить чат" v-if="lang === 'ru'" />
-									<input type="button" class="endChatButton" @click="endChat" value="End chat" v-if="lang === 'en'" />
+									<input type="button" class="endChatButton" @click="endChatInternal" value="Завершить чат" v-if="lang === 'ru'" v-bind:disabled="searchStatus !== 'found'" v-bind:class="{ inactive: searchStatus !== 'found' }" />
+									<input type="button" class="endChatButton" @click="endChatInternal" value="End chat" v-if="lang === 'en'" v-bind:disabled="searchStatus !== 'found'" v-bind:class="{ inactive: searchStatus !== 'found' }" />
 								</div>
 								<div class="continueSearch">
-									<input type="button" class="continueSearchButton inactive" @click="continueSearch" value="Продолжить поиск" v-if="lang === 'ru'" />
-									<input type="button" class="continueSearchButton inactive" @click="continueSearch" value="Continue search" v-if="lang === 'en'" />
+									<input type="button" class="continueSearchButton" @click="continueSearch" value="Продолжить поиск" v-if="lang === 'ru'" v-bind:disabled="searchStatus !== 'end'" v-bind:class="{ inactive: searchStatus !== 'end' }" />
+									<input type="button" class="continueSearchButton" @click="continueSearch" value="Continue search" v-if="lang === 'en'" v-bind:disabled="searchStatus !== 'end'" v-bind:class="{ inactive: searchStatus !== 'end' }" />
 								</div>
 								<div class="changeSearchParameters">
-									<input type="button" class="changeSearchParametersButton inactive" @click="changePrefs" value="Изменить параметры" v-if="lang === 'ru'" />
-									<input type="button" class="changeSearchParametersButton inactive" @click="changePrefs" value="Change preferences" v-if="lang === 'en'" />
+									<input type="button" class="changeSearchParametersButton" @click="changePrefs" value="Изменить параметры" v-if="lang === 'ru'" v-bind:disabled="searchStatus !== 'end' && searchStatus !== 'looking'" v-bind:class="{ inactive: searchStatus !== 'end' && searchStatus !== 'looking' }" />
+									<input type="button" class="changeSearchParametersButton" @click="changePrefs" value="Change preferences" v-if="lang === 'en'" v-bind:disabled="searchStatus !== 'end' && searchStatus !== 'looking'" v-bind:class="{ inactive: searchStatus !== 'end' && searchStatus !== 'looking' }" />
 								</div>
 							</div>
 						</div>
@@ -202,6 +216,7 @@
 						<p>Contact us by emailing here: info@zaf.su</p>
 					</div>
 				</div>
+				<div v-if="page === 'dummy'"></div>
 				<div class="footer">
 					<div class="footerLinks">
 						<ul class="links">

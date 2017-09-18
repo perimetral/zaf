@@ -11,6 +11,7 @@ let app = new Vue({
 		lang: staticData.defaultLang,
 		ageValues,
 		searchStatus: null,
+		endReason: null,
 		externalTyping: false,
 		usersOnline: 0,
 		down_strangerGender: true,
@@ -22,8 +23,21 @@ let app = new Vue({
 		externalAgeFrom: '-',
 		externalAgeTo: '-',
 		externalLocation: '',
+		messages: [],
 	},
 	methods: {
+		dumpPrefs: function () {
+			return {
+				internalGender: this.internalGender,
+				internalAge: this.internalAge,
+				internalLocation: this.internalLocation,
+				externalMaleInclude: this.externalMaleInclude,
+				externalFemaleInclude: this.externalFemaleInclude,
+				externalAgeFrom: this.externalAgeFrom,
+				externalAgeTo: this.externalAgeTo,
+				externalLocation: this.externalLocation,
+			};
+		},
 		switchPage: function (page) {
 			this.page = page;
 		},
@@ -52,29 +66,46 @@ let app = new Vue({
 			this.internalLocation = '';
 		},
 		connect: function () {
-			let query = {
-				internalGender: this.internalGender,
-				internalAge: this.internalAge,
-				internalLocation: this.internalLocation,
-				externalMaleInclude: this.externalMaleInclude,
-				externalFemaleInclude: this.externalFemaleInclude,
-				externalAgeFrom: this.externalAgeFrom,
-				externalAgeTo: this.externalAgeTo,
-				externalLocation: this.externalLocation,
-			};
+			let query = this.dumpPrefs();
 			socket.emit('begin_looking', query);
+			this.searchStatus = 'looking';
+			this.switchPage('chat');
 		},
 		sendMessage: function () {
-
+			let boxEl = document.getElementById('inputMessageBox');
+			let message = boxEl.value;
+			if ((message.length < 1) || (message.length > staticData.messageMaxLen)) return false;
+			socket.emit('user_message', message);
+			let time = new Date();
+			let stamp = time.toLocaleTimeString();
+			this.messages.push({
+				internal: true,
+				timestamp: stamp,
+				text: message,
+			});
+			boxEl.value = '';
+			boxEl.focus();
 		},
-		endChat: function () {
-
+		endChatInternal: function () {
+			this.searchStatus = 'end';
+			this.endReason = 'internal';
+			socket.emit('stop_chat');
 		},
 		continueSearch: function () {
-
+			this.switchPage('dummy');
+			this.messages.splice(0, this.messages.length);
+			this.searchStatus = null;
+			this.endReason = null;
+			let query = this.dumpPrefs();
+			socket.emit('begin_looking', query);
+			this.searchStatus = 'looking';
+			this.switchPage('chat');
 		},
 		changePrefs: function () {
-
+			this.messages.splice(0, this.messages.length);
+			this.searchStatus = null;
+			this.endReason = null;
+			this.switchPage('welcome');
 		},
 	},
 	created: function () {
@@ -82,14 +113,31 @@ let app = new Vue({
 	},
 });
 
-
-socket.once('user_registered', () => {
-	console.log('user_registered');
+socket.on('user_message', (message) => {
+	let time = new Date();
+	let stamp = time.toLocaleTimeString();
+	app.messages.push({
+		internal: false,
+		timestamp: stamp,
+		text: message,
+	});
 });
-socket.on('user_reconnected', () => {
-	console.log('user_reconnected');
+socket.on('stop_chat_request', () => {
+	socket.emit('stop_chat_response', () => {
+		app.searchStatus = 'end';
+		app.endReason = 'external';
+	});
+});
+socket.on('match_found', () => {
+	app.searchStatus = 'found';
+});
+socket.once('user_connected', () => {
+//	console.log('user_connected');
+});
+socket.on('user_began_lookup', () => {
+//	console.log('user_began_lookup');
 });
 socket.on('onlineUpdate', (data) => {
-	console.log(`onlineUpdate: ${data}`);
+//	console.log(`onlineUpdate: ${data}`);
 	app.usersOnline = data;
 });

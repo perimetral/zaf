@@ -8,6 +8,9 @@ cfg.heroku = false;
 cfg.mode = 'production';
 cfg.morganMode = 'combined';
 cfg.defaultLayout = 'main';
+cfg.relookupDelay = 1000;
+cfg.onlineBroadcastDelay = 1000;
+cfg.messageMaxLen = 4096;
 
 cfg.paths = {};
 cfg.paths.static = './public';
@@ -28,6 +31,11 @@ cfg.https.enabled = false;
 
 cfg.db = {};
 cfg.db.inMemoryOnly = true;
+
+cfg.modes = {};
+cfg.modes.calm = 'calm';
+cfg.modes.talking = 'talking';
+cfg.modes.stop = 'stop';
 
 module.exports = cfg;
 
