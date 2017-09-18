@@ -148,7 +148,7 @@
 								</div>
 							</div>
 							<div class="toolsLine">
-								<div class="typingOrNot" v-if="externalTyping">
+								<div class="typingOrNot" v-show="externalTyping">
 									<span v-if="lang === 'ru'">Собеседник печатает сообщение</span>
 									<span v-if="lang === 'en'">Stranger typing</span>
 								</div>
@@ -159,8 +159,8 @@
 							</div>
 							<div class="messageTextBox">
 								<div class="textBox">
-									<textarea class="textBox" placeholder="Сообщение..." id="inputMessageBox" v-show="lang === 'ru'" @keyup.ctrl.enter="sendMessage" :disabled="searchStatus !== 'found'" @change="notifyPrint"></textarea>
-									<textarea class="textBox" placeholder="Message..." id="inputMessageBox" v-show="lang === 'en'" @keyup.ctrl.enter="sendMessage" :disabled="searchStatus !== 'found'" @change="notifyPrint"></textarea>
+									<textarea class="textBox" placeholder="Сообщение..." id="inputMessageBox" v-show="lang === 'ru'" @keyup.ctrl.enter="sendMessage" :disabled="searchStatus !== 'found'" @input="notifyPrint"></textarea>
+									<textarea class="textBox" placeholder="Message..." id="inputMessageBox" v-show="lang === 'en'" @keyup.ctrl.enter="sendMessage" :disabled="searchStatus !== 'found'" @input="notifyPrint"></textarea>
 								</div>
 							</div>
 							<div class="buttons">
