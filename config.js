@@ -3,7 +3,7 @@ const cfg = {};
 const tools = require('./lib/tools');
 
 cfg.host = 'zafchat.herokuapp.com';
-cfg.port = process.env.ZAF_PORT || 3000;
+cfg.port = process.env.PORT || 3000;
 cfg.heroku = true;
 cfg.mode = 'production';
 cfg.morganMode = 'combined';
