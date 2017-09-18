@@ -1,9 +1,13 @@
-let parts = staticData.iouri.split(':');
-if (parts.length > 1) staticData.iouri = parts[parts.length - 2];
+if (staticData.heroku) {
+	let parts = staticData.iouri.split(':');
+	if (parts.length > 1) staticData.iouri = parts[parts.length - 2];
+};
 let socket = io.connect(staticData.iouri);
 
 let ageValues = [];
 for (let i = staticData.minAge; i < staticData.maxAge; i++) ageValues.push(i);
+
+let externalTypingTimer = 0;
 
 let app = new Vue({
 	el: '#app',
@@ -98,16 +102,18 @@ let app = new Vue({
 			this.messages.splice(0, this.messages.length);
 			this.searchStatus = null;
 			this.endReason = null;
-			let query = this.dumpPrefs();
-			socket.emit('begin_looking', query);
-			this.searchStatus = 'looking';
-			this.switchPage('chat');
+			this.connect();
 		},
 		changePrefs: function () {
 			this.messages.splice(0, this.messages.length);
 			this.searchStatus = null;
 			this.endReason = null;
 			this.switchPage('welcome');
+		},
+		notifyPrint: function () {
+			if (this.page !== 'chat') return false;
+			if (this.searchStatus !== 'found') return false;
+			socket.emit('notify_print');
 		},
 	},
 	created: function () {
@@ -123,6 +129,13 @@ socket.on('user_message', (message) => {
 		timestamp: stamp,
 		text: message,
 	});
+});
+socket.on('notify_print_response', () => {
+	app.externalTyping = true;
+	if (externalTypingTimer) clearTimeout(externalTypingTimer);
+	externalTypingTimer = setTimeout(() => {
+		app.externalTyping = false;
+	}, staticData.typingIndicatorTimeout);
 });
 socket.on('stop_chat_request', () => {
 	socket.emit('stop_chat_response', () => {

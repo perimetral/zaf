@@ -69,6 +69,7 @@ app.get('/', (req, res, next) => {
 	return res.render('main', {
 		iouri: `${($.cfg.https.enabled || $.cfg.heroku) ? 'https' : 'http'}://${$.cfg.host}${$.cfg.port !== 80 ? ":" + $.cfg.port : ''}`,
 		mode: $.cfg.mode,
+		heroku: $.cfg.heroku,
 	});
 });
 

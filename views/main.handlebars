@@ -159,8 +159,8 @@
 							</div>
 							<div class="messageTextBox">
 								<div class="textBox">
-									<textarea class="textBox" placeholder="Сообщение..." id="inputMessageBox" v-show="lang === 'ru'" @keyup.ctrl.enter="sendMessage" :disabled="searchStatus !== 'found'"></textarea>
-									<textarea class="textBox" placeholder="Message..." id="inputMessageBox" v-show="lang === 'en'" @keyup.ctrl.enter="sendMessage" :disabled="searchStatus !== 'found'"></textarea>
+									<textarea class="textBox" placeholder="Сообщение..." id="inputMessageBox" v-show="lang === 'ru'" @keyup.ctrl.enter="sendMessage" :disabled="searchStatus !== 'found'" @change="notifyPrint"></textarea>
+									<textarea class="textBox" placeholder="Message..." id="inputMessageBox" v-show="lang === 'en'" @keyup.ctrl.enter="sendMessage" :disabled="searchStatus !== 'found'" @change="notifyPrint"></textarea>
 								</div>
 							</div>
 							<div class="buttons">
