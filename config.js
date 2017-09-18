@@ -2,9 +2,9 @@ const cfg = {};
 
 const tools = require('./lib/tools');
 
-cfg.host = 'localhost';
-cfg.port = process.env.ZAF_PORT || 3001;
-cfg.heroku = false;
+cfg.host = 'zafchat.herokuapp.com';
+cfg.port = process.env.ZAF_PORT || 3000;
+cfg.heroku = true;
 cfg.mode = 'production';
 cfg.morganMode = 'combined';
 cfg.defaultLayout = 'main';
