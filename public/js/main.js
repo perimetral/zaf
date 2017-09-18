@@ -1,5 +1,5 @@
 let parts = staticData.iouri.split(':');
-if (parts.length > 1) staticData.iouri = parts.iouri[parts.length - 2];
+if (parts.length > 1) staticData.iouri = parts[parts.length - 2];
 let socket = io.connect(staticData.iouri);
 
 let ageValues = [];
